@@ -1,0 +1,33 @@
+networks:
+   elyra-minio-net: {}
+
+volumes:
+   minio-vol: {}
+
+services:
+
+   minio-server:
+      container_name: erminio
+      image: quay.io/aaiche/ai26x-myminio
+      ports:
+         - "9000:9000"
+         - "9090:9090"
+      environment:
+         MINIO_ROOT_USER: minio
+         MINIO_ROOT_PASSWORD: minio123
+
+      networks:
+         - elyra-minio-net
+      command: server /data --address ':9000' --console-address ':9090' 
+      volumes:
+         - minio-vol:/data:Z
+
+   elyra-app:
+      container_name: myelyra
+      image: quay.io/aaiche/ai263-my-notebook-image-with-elyra
+      ports:
+         "4242:8888"
+      networks:
+         - elyra-minio-net
+      volumes:
+         - ./myelyradir:/home/jovyan/work:Z

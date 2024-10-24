@@ -1,0 +1,49 @@
+Using a Notebook JupyterLab Image with Elyra Extensions :
+	--> Get the Notebook Image :
+		podman image pull quay.io/aaiche/ai263-my-notebook-image-with-elyra
+		podman image ls
+
+
+	--> Execute Locally the Jupyter Notebook Image :
+		podman run -it -p 4242:8888 quay.io/aaiche/ai263-my-notebook-image-with-elyra
+		podman exec -l jupyter server list
+
+
+	--> Open the Classic Notebook :
+		firefox http://localhost:4242/lab?token=<token>
+
+	--> Copy the notebooks to the container 
+		podman container ls
+		podman container exec xxx mkdir /home/jovyan/aa
+		podman container exec xxx mkdir /home/jovyan/aa/data
+		podman container exec xxx  mkdir /home/jovyan/aa/models
+		podman container cp data/myfile.csv  xxx:/home/jovyan/data/aa/myfile.csv
+
+		podman container exec xxx  mkdir /home/jovyan/data
+		podman container exec xxx  mkdir /home/jovyan/models
+		podman container cp data/myfile.csv  xxx:/home/jovyan/data/myfile.csv
+
+		podman container cp 0b-LoadCleanAnalyzePreProcessData.ipynb xxx:/home/jovyan/
+		podman container cp 0b-LoadCleanAnalyzePreProcessData.ipynb xxx:/home/jovyan/aa/
+
+		podman container cp 0c-trainModel-v1-SimpleLinearRegression.ipynb xxx:/home/jovyan/
+		podman container cp 0c-trainModel-v1-SimpleLinearRegression.ipynb xxx:/home/jovyan/aa/
+
+		podman container cp 0d-trainModel-v2-SimpleLinearRegression.ipynb xxx:/home/jovyan/
+		podman container cp 0d-trainModel-v2-SimpleLinearRegression.ipynb xxx:/home/jovyan/aa/
+
+
+
+
+
+
+	--> Run the notebooks 
+
+	--> You can stop and remove the container or keep it to use it later on
+
+
+
+Use Pipeline Editor to create a local pipeline :
+=======================================================
+	--> I will assist you
+

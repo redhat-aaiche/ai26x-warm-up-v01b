@@ -1,0 +1,26 @@
+Using a Notebook JupyterLab Image without Elyra Extensions :
+	--> Get the Notebook Image :
+		podman image pull quay.io/aaiche/ai263-my-notebook-image
+		podman image ls
+
+
+	--> Execute Locally the Jupyter Notebook Image :
+		podman run -it -p 4242:8888 quay.io/aaiche/ai263-my-notebook-image
+		podman exec -l jupyter server list
+
+
+	--> Open the Classic Notebook :
+		firefox http://localhost:4242/lab?token=<token>
+
+	--> Copy the notebook 01-SimpleLinearRegression.ipynb to the container 
+		podman container ls
+		podman container cp 01-SimpleLinearRegression.ipynb  xxx:/opt/app-root/src
+		podman container exec xxx  mkdir /opt/app-root/src/data
+		podman container cp data/myfile.csv  xxx:/opt/app-root/src/data/myfile.csv
+		podman container exec xxx  mkdir /opt/app-root/src/models
+
+	--> Run the notebook 01-SimpleLinearRegression.ipynb
+
+	--> You can stop and remove the container or keep it to use it later on
+
+

@@ -1,0 +1,80 @@
+Installation - Containerized MinIO :
+=====================================
+
+$ mkdir -p ~/miniodir 
+$ ss -plunt | grep -e '9000|9090' 
+
+
+$ podman container run \
+     --name erminio \
+     -d \
+     -p 9000:9000 \
+     -p 9090:9090 \
+     -v ~/miniodir:/data:Z \
+     -e "MINIO_ROOT_USER=minio" \
+     -e "MINIO_ROOT_PASSWORD=minio123" \
+      quay.io/aaiche/ai26x-myminio server /data --console-address ":9090"
+
+
+
+Start the Web Console :
+=====================================
+$ firefox localhost:9090 &
+Use credentials:
+	minio
+	minio123
+
+Create a User :
+=====================================
+--> Create a User  with a ReadWrite Policy
+Use credentials:
+	developer
+	strongpassword
+
+--> Create a ACCESS KEY + SECRET KEY for that user
+Save those credentials somewhere
+--> Sign out and Login to the Minio Web Console with the developer user
+Use credentials:
+	developer
+
+
+Install AWS CLI :
+=====================================
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+$ unzip awscliv2.zip
+$ sudo ./aws/install
+
+
+
+$ aws --version
+
+
+Configure AWS CLI to use our minio server :
+===========================================
+$ aws configure
+
+$ ls ~/.aws
+$ cat ~/.aws/config
+$ cat ~/.aws/credentials
+
+
+
+Using aws cli - some examples :
+=====================================
+$ aws s3 ls --endpoint-url http://localhost:9000
+
+
+
+--> Create a bucket :
+$ aws --endpoint-url http://localhost:9000 s3 mb s3://my-developer-bucket
+$ aws --endpoint-url http://localhost:9000 s3 ls
+
+
+
+--> Copy a file to a bucket :
+$ touch myFile1.txt
+$ aws --endpoint-url http://localhost:9000 s3 cp myFile1.txt s3://my-developer-bucket
+$ aws --endpoint-url http://localhost:9000 s3 ls s3://my-developer-bucket
+
+
+

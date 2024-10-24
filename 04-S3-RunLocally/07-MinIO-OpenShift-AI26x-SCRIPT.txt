@@ -1,0 +1,47 @@
+==> DOESN'T WORK : no time to check why !!
+=====> SORRY!!!
+	Use the minio project installed by default in AI26x
+
+
+Installation - Minio on OpenShift Kubernetes :
+==================================================
+
+- Tuning the vim editor :
+==================================================
+vim -c 'set paste' ~/.vimrc
+"autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2 cuc
+autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2
+
+
+
+- Creating the manfiest file:
+==================================================
+$ mkdir -pv bb; cd bb
+$ vim -c 'set paste' minio.yaml
+
+
+- Create the resources :
+==================================================
+$ oc login -u developer -p developer https://api.ocp4.example.com:6443
+$ oc new-project my-minio-project
+
+[ if needed:
+firefox https://console-openshift-console.apps.ocp4.example.com &
+firefox https://rhods-dashboard-redhat-ods-applications.apps.ocp4.example.com &
+Credentials:
+	developer   developer
+	admin 	    redhatocp
+]
+
+
+$ oc apply -f minio.yaml
+
+- Get the MinIO Web Console :
+$ oc get routes
+
+- Access the MinIO Web Console :
+$ firefox https://minio-ui-my-minio-project.apps.ocp4.example.com &
+
+
+minio
+minio123

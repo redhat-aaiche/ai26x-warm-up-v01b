@@ -1,0 +1,62 @@
+Installation - Bare Metal MinIO :
+=======================================
+
+$ sudo useradd aa
+$ echo aa | sudo passwd --stdin aa
+
+$ su - aa
+  enter: aa
+
+
+$ wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+
+$ chmod +x minio
+
+
+
+
+--> Start and use Minio Object Storage
+$ mkdir -p ~/miniodir 
+$ ss -plunt | grep 9090
+
+$ ./minio server ~/miniodir --console-address :9090
+
+
+--> Access the Web Console :
+$ firefox http://localhost:9090 &
+Use credentials:
+	minioadmin
+	minioadmin
+
+--> Play with the Web Console, or continue to use a containerized version
+
+
+Installation - Containerized MinIO :
+=======================================
+--> Login as student:
+[student@workstation ~]
+
+$ mkdir -p ~/miniodir 
+$ ss -plunt | grep -e '9000|9090' 
+
+
+podman container run \
+     --name erminio \
+     -d \
+     -p 9000:9000 \
+     -p 9090:9090 \
+     -v ~/miniodir:/data:Z \
+     -e "MINIO_ROOT_USER=aaa" \
+     -e "MINIO_ROOT_PASSWORD=aaa12345678" \
+      quay.io/aaiche/ai26x-myminio server /data --console-address ":9090"
+
+--> Access the Web Console :
+$ firefox http://localhost:9090 &
+Use credentials:
+	aaa
+	aaa12345678
+
+
+--> Stop and remove the container
+
+

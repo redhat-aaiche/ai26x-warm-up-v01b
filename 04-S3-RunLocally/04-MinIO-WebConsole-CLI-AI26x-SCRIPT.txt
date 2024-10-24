@@ -1,0 +1,76 @@
+Installation - Containerized MinIO :
+=======================================
+--> Login as student:
+[student@workstation ~]
+
+$ mkdir -p ~/miniodir 
+$ ss -plunt | grep -e '9000|9090' 
+
+
+podman container run \
+     --name erminio \
+     -d \
+     -p 9000:9000 \
+     -p 9090:9090 \
+     -v ~/miniodir:/data:Z \
+     -e "MINIO_ROOT_USER=minio" \
+     -e "MINIO_ROOT_PASSWORD=minio123" \
+      quay.io/aaiche/ai26x-myminio server /data --console-address ":9090"
+
+--> Access the Web Console :
+$ firefox http://localhost:9090 &
+Use credentials:
+	minio
+	minio123
+
+
+--> Create a Bucket:
+	my-bucket ( and try to give it a name with 2 characters, or add an underscore, or start with a number, or use Uppercase, or use an ip address, ...)
+--> Check if the Bucket is Private or Public
+--> Upload an object.
+    Tip: navigate to User/Object Browser
+--> Make the Bucket Public
+--> Create a User  with a ReadWrite Policy
+Use credentials:
+	developer
+	strongpassword
+--> Create a ACCESS KEY + SECRET KEY for that user
+Save those credentials somewhere
+--> Sign out and Login to the Minio Web Console with the developer user
+Use credentials:
+	developer
+--> Check the Bucket my-bucket Content
+
+		
+
+Install the MC client :
+============================
+
+$ wget https://dl.min.io/client/mc/release/linux-amd64/mc
+
+$ chmod +x mc
+
+
+--> Set the endpoint :
+$ ./mc alias set minio1 http://localhost:9000 developer strongpassword
+
+
+--> Create a bucket :
+$ ./mc mb minio1/mydeveloper-bucket
+
+--> Upload a file to a bucket :
+$ touch myfile1.txt
+$ ./mc cp ./myfile1.txt minio1/mydeveloper-bucket/myfile1.txt
+
+
+--> List buckets :
+$ ./mc ls minio1
+
+
+--> List bucket content :
+$ ./mc ls minio1/mydeveloper-bucket
+
+
+
+--> Stop and Remove the container
+

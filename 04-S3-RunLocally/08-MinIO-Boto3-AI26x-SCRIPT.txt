@@ -1,0 +1,89 @@
+
+- Tuning the vim editor :
+==================================================
+vim -c 'set paste' ~/.vimrc
+
+"autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2 cuc
+autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2
+
+
+mkdir -pv cc; cd cc
+rm -rf ~/myelyradir; mkdir ~/myelyradir; chmod o+w ~/myelyradir
+pip3 install podman-compose --user
+vim -c 'set paste' compose.yaml
+
+
+
+- Creating the manfiest file:
+==================================================
+$ vim -c 'set paste' compose.yaml
+
+
+networks:
+   elyra-minio-net: {}
+
+volumes:
+   minio-vol: {}
+
+services:
+
+   minio-server:
+      container_name: erminio
+      image: quay.io/aaiche/ai26x-myminio
+      ports:
+         - "9000:9000"
+         - "9090:9090"
+      environment:
+         MINIO_ROOT_USER: minio
+         MINIO_ROOT_PASSWORD: minio123
+
+      networks:
+         - elyra-minio-net
+      command: server /data --address ':9000' --console-address ':9090' 
+      volumes:
+         - minio-vol:/data:Z
+
+   elyra-app:
+      container_name: myelyra
+      image: quay.io/aaiche/ai263-my-notebook-image-with-elyra
+      ports:
+         "4242:8888"
+      networks:
+         - elyra-minio-net
+      volumes:
+         - ~/myelyradir:/home/jovyan/work:Z
+
+
+- Bringing UP the compose yaml file :
+==================================================
+$ podman-compose up -d
+
+
+--> Open the S3 minio console
+$ firefox localhost:9090 &
+Credentials:
+	minio
+	minio123
+
+
+--> open Elyra jupyterLab instance:
+$ podman container exec myelyra jupyter server list
+	--> Open the Classic Notebook :
+		firefox http://localhost:4242/lab?token=<token>
+
+	--> Copy the notebooks to the container 
+		podman container ls
+		podman container exec myelyra mkdir /home/jovyan/aa
+		podman container cp 08-ai267-s3-boto.ipynb myelyra:/home/jovyan/aa
+		podman container cp 08-ai267-s3-boto.ipynb myelyra:/home/jovyan/		
+	--> Run The notebook
+
+
+
+
+
+
+
+
+
+

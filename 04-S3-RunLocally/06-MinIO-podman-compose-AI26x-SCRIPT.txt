@@ -1,0 +1,95 @@
+Note that we are using a different Image of the jupyterLab notebook :
+késako (french) jupyterLab+Elyra
+=====================================================================
+
+Setup vim a swer are going to use yaml files :
+===============================================
+vim -c 'set paste' ~/.vimrc
+
+"autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2 cuc
+autocmd FileType yaml setlocal ai et sw=2 ts=2 sts=2
+
+
+Misc.:
+===============================================
+$ curl -sL https://raw.githubusercontent.com/containers/podman-compose/devel/completion/bash/podman-compose -o ~/.podman-compose-completion
+$ echo source ~/.podman-compose-completion >> ~/.bashrc
+$ source ~/.bashrc
+
+
+Install podman compose :
+===============================================
+mkdir -pv aa; cd aa
+mkdir ~/myelyradir; chmod o+w ~/myelyradir
+pip3 install podman-compose --user
+vim -c 'set paste' compose.yaml
+
+
+
+
+
+
+Edit the podman compose Yaml file :
+===============================================
+$ mkdir -pv aa; cd aa
+$ mkdir ./myelyradir; chmod o+w ./myelyradir
+$ vim -c 'set paste' compose.yaml
+
+networks:
+   elyra-minio-net: {}
+
+volumes:
+   minio-vol: {}
+
+services:
+
+   minio-server:
+      container_name: erminio
+      image: quay.io/aaiche/ai26x-myminio
+      ports:
+         - "9000:9000"
+         - "9090:9090"
+      environment:
+         MINIO_ROOT_USER: minio
+         MINIO_ROOT_PASSWORD: minio123
+
+      networks:
+         - elyra-minio-net
+      command: server /data --address ':9000' --console-address ':9090' 
+      volumes:
+         - minio-vol:/data:Z
+
+   elyra-app:
+      container_name: myelyra
+      image: quay.io/aaiche/ai263-my-notebook-image-with-elyra
+      ports:
+         "4242:8888"
+      networks:
+         - elyra-minio-net
+      volumes:
+         - ./myelyradir:/home/jovyan/work:Z
+
+
+- Bringing UP the compose yaml file :
+===============================================
+$ podman-compose up -d
+
+
+--> Connect to the S3 container:
+$ firefox localhost:9090 &
+Use credentials:
+	minio
+	minio123
+
+
+$ podman port -a
+
+--> Connect to the JupyterLab+Elyra :
+$ podman container exec myelyra jupyter server list
+	--> Open the Classic Notebook :
+		firefox http://localhost:4242/lab?token=<token>
+	--> Use Git
+	--> Check What Elyra is bringing to you
+
+
+
